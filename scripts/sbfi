@@ -1,0 +1,100 @@
+#!python
+import argparse    # CLI
+from sbfi import * # BrainfInterpreter, run_code, exec_file, compress_bf
+from sbfi.stack_sbfi import StackyBFI
+from sys import version
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="SBFI - Salah's BrainF**k Interpreter",
+        formatter_class=argparse.RawTextHelpFormatter
+    )
+
+    parser.add_argument(
+        "-dbg", "--debug",
+        action="store_true",
+        help="Enable Debug mode."
+    )
+    parser.add_argument(
+        "-r", "--run",
+        help="Brainf**k file to execute."
+    )
+    parser.add_argument(
+        "-dmps", "--dump-status",
+        action="store_true",
+        help="Dump the Interpreter Status (after execution)."
+    )
+    parser.add_argument(
+        "-v", "--version",
+        action="store_true",
+        help="Print version & credits."
+    )
+    parser.add_argument(
+        "-cmd", "--command-line-interface",
+        action="store_true",
+        help="run the Brainf**k CLI/REPL."
+    )
+    parser.add_argument(
+        "-c", "--use-compressor",
+        action="store_true",
+        help="compress the code by merging instructions into one instruction and writing the repeat times count on the right side them"
+    )
+    parser.add_argument(
+        "-ac", "--already-compressed",
+        action="store_true",
+        help="code already compressed, dont compress"
+    )
+    parser.add_argument(
+        "-s", "--stack-support",
+        action="store_true",
+        help="use a stack with the tape"
+    )
+
+    cmd = parser.parse_args()
+
+    # if cmd.command_line_interface, run as REPL Mode.
+    if cmd.command_line_interface:
+        BFREPLModeDoNotUseThisAsLibrary()
+    
+    # Version mode
+    if cmd.version:
+        print(f"SBFI v{VERSION}-{STATUS}\n- Salah Rami Al-Refaai\n- Powered by Python{version.split()[0]}")
+        return
+
+    # Check for execution
+    if cmd.run is None:
+        print("\033[1m\033[93mHint:\033[0m Use -r <file.bf> to execute a file. Use -h for help.")
+        return
+
+    if cmd.stack_support:
+        bfi = StackyBFI()
+    else:
+        bfi = BrainfInterpreter()
+
+    if cmd.debug:
+        bfi.enable_debug(True)
+
+    if cmd.run:
+        try:
+            with open(cmd.run, "r") as f:
+                code = f.read()
+            if cmd.use_compressor:
+                if cmd.already_compressed:
+                    print("\033[1m\033[91mError:\033[0m cant compress a compressed code.")
+                    return
+                code = compress_bf(code, include_stack_instrs=cmd.stack_support)
+                with open(f".compressed_last.{cmd.run}.sbfi", "w") as f:
+                    f.write(code)
+            
+            # The already_compressed flag should also enable the use_compressor logic in the interpreter
+            bfi.execute(code, use_compressor=cmd.use_compressor or cmd.already_compressed)  # execute the code
+            if cmd.dump_status:
+                bfi.get_dump()
+        except Exception as e:
+            print(f"\033[1m\033[91mError:\033[0m {e}")
+            return
+
+
+if __name__ == "__main__":
+    main()
+

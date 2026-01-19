@@ -1,0 +1,6 @@
+.replit
+replit.nix
+__pycache__/
+*.pyc
+.env
+ready.sh
