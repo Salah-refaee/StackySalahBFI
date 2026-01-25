@@ -1,17 +1,26 @@
-### build the package then install it with pip/3 ##
+printf "Building SBFI...\n"
+python -c "import os
+try:
+    import build
+    del build # no need, just checking if its installed
+    print('\"build\" installed')
+except Exception:
+    print('installing \"build\"...')
+    os.system('pip install build')"
 
-## build the package
-pip install build      # be its installed
-python -m build        # build the package
-## install the package
-pip install --force-reinstall dist/*.whl
-## delete unneeded files
-rm -rf build dist *.egg-info
-
-## test
-#sbfi --help
-#sbfi --use-compressor --run test.bf
-#printf "\n"
-#sbfi --already-compressed --run .compressed_last.sbfi
-#printf "\n"
-#sbfi --command-line-interface
+rm -rf dist *.egg-info # those are from the previous build, remove them if they exist
+python -m build
+python -c "
+import os
+installed = False
+try:
+    import sbfi
+    del sbfi # no need, just checking if its installed
+    installed = True
+except Exception:
+    pass
+if installed:
+    print('SBFI already installed with version: ' + __import__('sbfi').VERSION)
+    print('Upgrading SBFI...')
+    os.system('pip install --upgrade )
+"

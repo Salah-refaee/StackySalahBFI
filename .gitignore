@@ -3,4 +3,6 @@ replit.nix
 __pycache__/
 *.pyc
 .env
-ready.sh
+pushrepo
+dist
+*.egg-info
