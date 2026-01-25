@@ -22,5 +22,5 @@ except Exception:
 if installed:
     print('SBFI already installed with version: ' + __import__('sbfi').VERSION)
     print('Upgrading SBFI...')
-    os.system('pip install --upgrade )
+    os.system('pip install --upgrade')
 "
