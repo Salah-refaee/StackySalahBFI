@@ -100,4 +100,4 @@ recommended choice.
 This project is licensed under the MIT License.  
 See the `LICENSE` file for details.
 
-Copyright (C) Salah Rami Al-Refaai 2025
+Copyright (C) Salah Rami Al-Refaai 2026
