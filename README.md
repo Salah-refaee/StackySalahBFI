@@ -85,7 +85,7 @@ and slightly more insane**.
     avoiding a rewrite from scratch
 
 If you need a minimal, extension-free Brainfuck interpreter, use **SBFI**  
-(but do not expect slow or broken behavior).
+(but expect slow or broken behavior).
 
 If you want **performance and extra expressive power**, **StackySBFI** is the
 recommended choice.
